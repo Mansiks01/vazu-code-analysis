@@ -1,0 +1,10 @@
+services:
+  worker:
+    image: python:3.8-slim
+    command: bash -c "apt-get update && apt-get install -y build-essential libcurl4 libcurl4-openssl-dev openjdk-17-jdk nodejs npm git unzip wget && git --version && mkdir -p /opt && mkdir -p app-codes && wget https://binaries.sonarsource.com/Distribution/sonar-scanner-cli/sonar-scanner-cli-5.0.1.3006.zip -O /opt/sonar-scanner.zip && unzip /opt/sonar-scanner.zip -d /opt && ln -s /opt/sonar-scanner-5.0.1.3006/bin/sonar-scanner /usr/bin/sonar-scanner && pip3 install -r requirements.txt && celery -A tasks worker --loglevel=info"
+    volumes:
+      - "./app:/app"
+    working_dir: /app
+    restart: on-failure
+    environment:
+      - AWS_REGION
